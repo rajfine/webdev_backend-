@@ -58,7 +58,7 @@ const loginUser = async (req,res)=>{
   if(!user){
     return res.status(404).json({
       // message: "user not exist,try another username or register yourself first",
-      message: "invalid credentials"
+      message: "invalid credentials",
     })
   }
 
@@ -76,7 +76,8 @@ const loginUser = async (req,res)=>{
   res.cookie("token",token)
 
   res.status(201).json({
-    message: "loggedin successfully"
+    message: "loggedin successfully",
+    user
   }) 
 }
 

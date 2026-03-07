@@ -1,6 +1,7 @@
 const app = require("./src/App.js")
 const connectToDB = require("./src/config/database.js")
 
+
 connectToDB()
 
 app.listen("3000",()=>{

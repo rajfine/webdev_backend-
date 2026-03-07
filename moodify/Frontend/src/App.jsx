@@ -2,11 +2,14 @@ import FaceExpression from './features/expressions/components/FaceExpression'
 import {RouterProvider} from 'react-router-dom'
 import {routes} from './app.routes'
 import "./features/shared/styles/global.scss"
+import { AuthProvider } from './features/auth/auth.context'
 
 
 const App = () => {
   return (
-    <RouterProvider router={routes} />
+    <AuthProvider>
+      <RouterProvider router={routes} />
+    </AuthProvider>
   )
 }
 

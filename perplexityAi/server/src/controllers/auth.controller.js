@@ -5,7 +5,8 @@ import bcrypt from 'bcryptjs';
 
 export const register = async (req, res) => { 
 
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
 
   const isUserAlreadyExist = await userModel.findOne({
     $or: [
@@ -53,7 +54,15 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req,res)=>{
-  const {email, password} = req.body
+  const password = req.body.password
+  const email = req.body.email?.trim().toLowerCase()
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: 'Email and password are required',
+      success: false,
+    })
+  }
 
   const user = await userModel.findOne({email}).select('+password')
   if(!user){
@@ -64,7 +73,21 @@ export const login = async (req,res)=>{
     })
   }
 
-  const isPasswordMatch = await bcrypt.compare(password, user.password)
+  let isPasswordMatch = false
+
+  try {
+    isPasswordMatch = await bcrypt.compare(password, user.password)
+  } catch (error) {
+    isPasswordMatch = false
+  }
+
+  // Support legacy accounts that may have been stored without hashing.
+  if (!isPasswordMatch && user.password === password) {
+    isPasswordMatch = true
+    user.password = password
+    await user.save()
+  }
+
   if (!isPasswordMatch) {
     return res.status(401).json({
       message: 'Invalid credentials',
@@ -84,7 +107,11 @@ export const login = async (req,res)=>{
   const token = jwt.sign({
     id: user._id,
   }, process.env.JWT_SECRET, { expiresIn: '1d' })
-  res.cookie('token', token)
+  res.cookie('token', token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: false,
+  })
 
   res.status(200).json({
     message: 'Login successful',
@@ -98,13 +125,23 @@ export const login = async (req,res)=>{
 
 export const verifyEmail = async (req, res)=>{
   const { token } = req.query
-  const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
   if(!token) {
     return res.status(400).json({
       message: 'Verification token is missing',
       success: false,
       error: 'Token is required for email verification'
+    })
+  }
+
+  let decoded
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET)
+  } catch (error) {
+    return res.status(400).json({
+      message: 'Invalid verification token',
+      success: false,
+      error: 'Token is invalid or expired'
     })
   }
   
@@ -135,9 +172,9 @@ export const verifyEmail = async (req, res)=>{
 
 
 export const getMe = async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user.id
 
-  const user = await userModel.findOne({userId})
+  const user = await userModel.findById(userId)
 
   if(!user){
     return res.status(400).json({

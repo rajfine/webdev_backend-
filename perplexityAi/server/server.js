@@ -1,10 +1,9 @@
 import connectToDB  from './src/config/database.js'
 import app from './src/app.js'
-import dotenv from 'dotenv/config'
-// dotenv.config()
+import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
 
-import {testAi} from './src/services/ai.service.js'
-testAi()
+dotenv.config({ path: fileURLToPath(new URL('./.env', import.meta.url)) })
 
 const PORT = process.env.PORT || 5000
 connectToDB()

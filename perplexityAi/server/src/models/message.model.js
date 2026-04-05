@@ -7,18 +7,18 @@ const messageSchema = new mongoose.Schema({
 		ref: 'Chat',
 		required: true
 	},
-	sender: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
-		required: true
-	},
+	// sender: {
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: 'User',
+	// 	required: true
+	// },
 	content: {
 		type: String,
 		required: true
 	},
 	role: {
 		type: String,
-		enum: ['user', 'assistant'],
+		enum: ['user', 'ai'],
 		required: true
 	}
 }, { timestamps: true });

@@ -5,10 +5,10 @@ import { useEffect } from "react"
 
 
 function App() {
-  const auth = useAuth()
+  const { handleGetMe } = useAuth()
   useEffect(()=>{
-    auth.handleGetMe()
-  },[])
+    handleGetMe()
+  },[handleGetMe])
 
   return (
     <RouterProvider router={router} />

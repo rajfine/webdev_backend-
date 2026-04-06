@@ -24,7 +24,7 @@ export const sendMessage = async (req, res)=>{
     role:"user"
   })
   
-  const messages = await messageModel.find({ chat: activeChatId }).sort({ createdAt: 1 })
+  const messages = await messageModel.find({ chat: activeChatId }) //.sort({ createdAt: 1 })
   
   const result = await generateResponse(messages)
 

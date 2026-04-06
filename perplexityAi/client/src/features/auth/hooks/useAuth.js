@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {useDispatch} from 'react-redux'
 import {login, register, getMe} from '../services/auth.api'
 import {setUser, setLoading, setError} from '../auth.slice'
@@ -5,7 +6,7 @@ import {setUser, setLoading, setError} from '../auth.slice'
 export const useAuth = ()=>{
   const dispatch = useDispatch()
 
-  const handleRegister = async ({username, email, password})=>{
+  const handleRegister = useCallback(async ({username, email, password})=>{
     try{
       dispatch(setLoading(true))
       dispatch(setError(null))
@@ -17,9 +18,9 @@ export const useAuth = ()=>{
     }finally{
       dispatch(setLoading(false))
     }
-  }
+  }, [dispatch])
 
-  const handleLogin = async ({email, password})=>{
+  const handleLogin = useCallback(async ({email, password})=>{
     try{
       dispatch(setLoading(true))
       dispatch(setError(null))
@@ -32,9 +33,9 @@ export const useAuth = ()=>{
     }finally{
       dispatch(setLoading(false))
     }
-  }
+  }, [dispatch])
 
-  const handleGetMe = async ()=>{
+  const handleGetMe = useCallback(async ()=>{
     try{
       dispatch(setLoading(true))
       dispatch(setError(null))
@@ -53,7 +54,7 @@ export const useAuth = ()=>{
     }finally{
       dispatch(setLoading(false))
     }
-  }
+  }, [dispatch])
 
   return{
     handleRegister,

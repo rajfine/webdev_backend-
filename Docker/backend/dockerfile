@@ -1,0 +1,14 @@
+# for Node and OS
+FROM node:20-alpine
+
+WORKDIR /app
+
+# COPY package.json /app
+# COPY package-lock.json /app
+COPY package*.json /app
+
+RUN npm install
+# for all content of folder which u r in terminal in app in file 
+COPY . /app
+
+CMD ["node", "server.js"]

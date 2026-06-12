@@ -1,7 +1,10 @@
 import express from 'express'
-import cors from 'cors'
 
 const app = express()
+
+
+app.use(express.static("public"))
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -16,6 +19,7 @@ app.get('/api/data', (req, res) => {
   res.status(200).json(data)
 })
 
+
 app.get('/api/users', (req, res) => {
   const users = [
     { id: 1, name: 'Alice' },
@@ -27,5 +31,9 @@ app.get('/api/users', (req, res) => {
 })
 
 
+
+app.get("*name", (req,res)=>{
+  res.sendFile("public/index.html",{ root: __dirname})
+})
 
 export default app

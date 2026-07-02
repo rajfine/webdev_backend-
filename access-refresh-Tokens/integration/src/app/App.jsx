@@ -1,6 +1,7 @@
-import axios from 'axios'
 import React from 'react'
-import { axiosInstance } from './config/axiosInstance.jsx'
+import { axiosInstance } from '../config/axiosInstance.jsx'
+
+
 
 const App = () => {
 

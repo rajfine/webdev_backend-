@@ -74,9 +74,19 @@ const getAccessTokenController = async (req,res)=>{
   })
 }
 
+const getmeController = async (req,res)=>{
+  const user = req.user
+  
+  return res.status(200).json({
+    message: "user fetched successfully",
+    success: true,
+    user
+  })
+} 
 
 module.exports = {
   registerController,
   loginController,
-  getAccessTokenController
+  getAccessTokenController,
+  getmeController
 }
